@@ -2,7 +2,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 #include "vector.h"
 
@@ -30,9 +29,9 @@ struct Vector* vector_init(size_t elementSize, size_t capacity)
     return vector;
 }
 
-static void vector_free(struct Vector* vector)
+void vector_free(struct Vector* vector)
 {
-    if(!vector) return;
+    assert(vector != NULL);
 
     if(vector->data)
     {
@@ -102,30 +101,28 @@ void* vector_get(const struct Vector* vector, size_t index)
     return (char *)vector->data + (index * vector->elementSize);
 }
 
-void* vector_push(struct Vector* vector, const void* element )
+void* vector_push(struct Vector* vector, const void* element)
 {
     assert(vector != NULL);
 
-    if(vector->length >= vector->capacity
-        && !vector_resize(vector,vector->capacity*2))
+    if (vector->length >= vector->capacity
+        && !vector_resize(vector, vector->capacity * 2))
     {
-        return false;
+        return 0; 
     }
 
     char* destination = (char *)vector->data + (vector->length * vector->elementSize);
     const char* source = (const char*)element;
-    
+
     for (size_t i = 0; i < vector->elementSize; i++)
     {
         destination[i] = source[i];
     }
 
     vector->length++;
-
-    return true;
 }
 
-static bool vector_resize(struct Vector *vector, size_t newCapacity)
+bool vector_resize(struct Vector *vector, size_t newCapacity)
 {
     void *newData = realloc(vector->data, vector->elementSize * newCapacity);
     if (!newData) { return false; }

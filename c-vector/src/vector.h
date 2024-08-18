@@ -13,10 +13,9 @@ typedef struct Vector {
 
 Vector* vector_init(size_t elementSize, size_t capacity);
 
-static bool vector_resize(struct Vector* vector, size_t newCapacity);
-static void vector_free(struct Vector* vector);
-
+bool vector_resize(struct Vector* vector, size_t newCapacity);
 void vector_free(struct Vector* vector);
+
 void vector_clear(struct Vector* vector);
 void* vector_getData(const struct Vector* vector);
 size_t vector_getLength(const struct Vector* vector);
