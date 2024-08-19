@@ -1,53 +1,64 @@
 # Define the directories
 BIN_DIR = bin
-SRC_DIR = src
+V1_DIR = src/v1
+V2_DIR = src/v2
 
 # Define the target executables
-TARGET_INTEGER = $(BIN_DIR)/mainINTEGER.exe
-TARGET_STRING = $(BIN_DIR)/mainSTRING.exe
+TARGET_V1 = $(BIN_DIR)/mainV1.exe
+TARGET_V2 = $(BIN_DIR)/mainV2.exe
 
 # Define the source files
-SRC_INTEGER = $(SRC_DIR)/mainINTEGER.c
-SRC_STRING = $(SRC_DIR)/mainSTRING.c
-VECTOR_SRC = $(SRC_DIR)/vector.c  # Add vector source file
+SRC_MAIN_V1 = $(V1_DIR)/main.c
+SRC_MAIN_V2 = $(V2_DIR)/main.c
+VECTOR_SRC_V1 = $(V1_DIR)/vector.c
+VECTOR_SRC_V2 = $(V2_DIR)/vector.c
 
 # Define the object files
-OBJ_INTEGER = $(BIN_DIR)/mainINTEGER.o
-OBJ_STRING = $(BIN_DIR)/mainSTRING.o
-OBJ_VECTOR = $(BIN_DIR)/vector.o  # Add vector object file
+OBJ_MAIN_V1 = $(BIN_DIR)/mainV1.o
+OBJ_VECTOR_V1 = $(BIN_DIR)/vector_v1.o
 
-# The default target to build
-all: $(TARGET_INTEGER) $(TARGET_STRING)
+OBJ_MAIN_V2 = $(BIN_DIR)/mainV2.o
+OBJ_VECTOR_V2 = $(BIN_DIR)/vector_v2.o
 
-# Rule to build the target executables
-$(TARGET_INTEGER): $(OBJ_INTEGER) $(OBJ_VECTOR)
-	@echo "Linking $(TARGET_INTEGER)"
-	$(CC) $(CFLAGS) -o $(TARGET_INTEGER) $(OBJ_INTEGER) $(OBJ_VECTOR)
+# The default target to build both versions
+all: $(TARGET_V1) $(TARGET_V2)
 
-$(TARGET_STRING): $(OBJ_STRING) $(OBJ_VECTOR)
-	@echo "Linking $(TARGET_STRING)"
-	$(CC) $(CFLAGS) -o $(TARGET_STRING) $(OBJ_STRING) $(OBJ_VECTOR)
+# Rule to build the V1 target executable
+$(TARGET_V1): $(OBJ_MAIN_V1) $(OBJ_VECTOR_V1)
+	@echo "Linking $(TARGET_V1)"
+	$(CC) $(CFLAGS) -o $(TARGET_V1) $(OBJ_MAIN_V1) $(OBJ_VECTOR_V1)
 
-# Rule to build the object files
-$(BIN_DIR)/mainINTEGER.o: $(SRC_INTEGER)
-	@echo "Compiling $(SRC_INTEGER)"
-	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
-	$(CC) $(CFLAGS) -c $(SRC_INTEGER) -o $(BIN_DIR)/mainINTEGER.o
+# Rule to build the V2 target executable
+$(TARGET_V2): $(OBJ_MAIN_V2) $(OBJ_VECTOR_V2)
+	@echo "Linking $(TARGET_V2)"
+	$(CC) $(CFLAGS) -o $(TARGET_V2) $(OBJ_MAIN_V2) $(OBJ_VECTOR_V2)
 
-$(BIN_DIR)/mainSTRING.o: $(SRC_STRING)
-	@echo "Compiling $(SRC_STRING)"
-	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
-	$(CC) $(CFLAGS) -c $(SRC_STRING) -o $(BIN_DIR)/mainSTRING.o
+# Rule to build the object files for V1
+$(BIN_DIR)/mainV1.o: $(SRC_MAIN_V1)
+	@echo "Compiling $(SRC_MAIN_V1) for V1"
+	@if not exist $(BIN_DIR) mkdir $(BIN_DIR)
+	$(CC) $(CFLAGS) -c $(SRC_MAIN_V1) -o $(BIN_DIR)/mainV1.o
 
-$(BIN_DIR)/vector.o: $(VECTOR_SRC)
-	@echo "Compiling $(VECTOR_SRC)"
-	if not exist $(BIN_DIR) mkdir $(BIN_DIR)
-	$(CC) $(CFLAGS) -c $(VECTOR_SRC) -o $(BIN_DIR)/vector.o
+$(BIN_DIR)/vector_v1.o: $(VECTOR_SRC_V1)
+	@echo "Compiling $(VECTOR_SRC_V1)"
+	@if not exist $(BIN_DIR) mkdir $(BIN_DIR)
+	$(CC) $(CFLAGS) -c $(VECTOR_SRC_V1) -o $(BIN_DIR)/vector_v1.o
+
+# Rule to build the object files for V2
+$(BIN_DIR)/mainV2.o: $(SRC_MAIN_V2)
+	@echo "Compiling $(SRC_MAIN_V2) for V2"
+	@if not exist $(BIN_DIR) mkdir $(BIN_DIR)
+	$(CC) $(CFLAGS) -c $(SRC_MAIN_V2) -o $(BIN_DIR)/mainV2.o
+
+$(BIN_DIR)/vector_v2.o: $(VECTOR_SRC_V2)
+	@echo "Compiling $(VECTOR_SRC_V2)"
+	@if not exist $(BIN_DIR) mkdir $(BIN_DIR)
+	$(CC) $(CFLAGS) -c $(VECTOR_SRC_V2) -o $(BIN_DIR)/vector_v2.o
 
 # Rule to clean up build files
 clean:
 	@echo "Cleaning up..."
-	del /Q $(BIN_DIR)\*.exe $(BIN_DIR)\*.o
+	-del /Q $(BIN_DIR)\*.exe $(BIN_DIR)\*.o
 
 # Rule to create a new clean build
 rebuild: clean all

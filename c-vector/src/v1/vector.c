@@ -15,11 +15,11 @@ struct Vector* vector_init(size_t elementSize, size_t capacity)
     
     if (!vector) { return NULL; }
 
+    vector->length = 0;
     vector->capacity = (capacity > 0) ? capacity : VECTOR_INIT_CAPACITY;
     vector->elementSize = elementSize;
-    vector->length = 0;
     vector->data = malloc(elementSize * vector->capacity);
-
+    
     if (!vector->data)
     {
         free(vector);
